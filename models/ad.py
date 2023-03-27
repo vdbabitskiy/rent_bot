@@ -26,4 +26,4 @@ class Advertisement:
         }
 
     def __str__(self):
-        return f"<b>❇️{self.title}</b> ({self.time})❇️\n\n<b>💰{self.price}</b>\n\n\n<i>{self.description}</i>\n\n📍{self.location}\n\n{self.link}"
+        return f'<b>❇️{self.title}</b>\n\n<b>💰{self.price}</b>\n\n\n<i>{self.description}</i>\n\n📍{self.location}\n({self.time})\n\n➡️ <a href="{self.link}">Объявление</a>'

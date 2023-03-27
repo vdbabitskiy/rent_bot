@@ -4,7 +4,7 @@ import os
 import re
 from datetime import datetime
 from typing import List
-
+from googletrans import Translator
 from aiogram import Bot
 import requests
 from aiogram.types import ParseMode
@@ -67,12 +67,12 @@ def parse() -> List[Advertisement]:
         image_urls = [img['src'] for img in image_tags[:config.count_photo]]
         
         # Create advertisement object and append to results
-        ad = Advertisement(title=title,
+        ad = Advertisement(title=translate_text(title),
                            type=type_property,
-                           description=description,
+                           description=translate_text(description),
                            link=link,
                            price=price,
-                           location=location,
+                           location=translate_text(location),
                            time=time,
                            images=image_urls)
         result.append(ad)
@@ -100,6 +100,10 @@ def format_time(time_str: str) -> str:
     return result
 
 
+def translate_text(text):
+    return Translator().translate(text, dest='ru').text
+
+
 async def check_ads(bot: Bot):
 
     with open("previous_ads.txt", "r") as f:
@@ -124,4 +128,5 @@ async def check_ads(bot: Bot):
                 await bot.send_media_group(chat_id=os.getenv('CHANNEL_ID'), media=media_group)
                 f.write(get_ad_hash(ad.to_dict()) + "\n")
                 await asyncio.sleep(2)
+
 
