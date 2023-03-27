@@ -35,7 +35,7 @@ def get_listings():
         html = requests.get(url, params=query_params).text
         tree = BeautifulSoup(html, "html.parser")
         listings.extend(tree.find_all("div", class_="list-announcement-block"))
-    
+
     return listings    
 
 
@@ -45,10 +45,10 @@ def parse() -> List[Advertisement]:
     result = []
 
     for listing in listings:
-        meta = listing.find("div", class_="announcement-block__date").text.strip().replace('\n', '')
-        time, location = meta.split(",")[:2]
+        announcement_block = listing.find("div", class_="announcement-block__date").text.strip().replace('\n', '')
+        time, location = announcement_block.split(",")[:2]
         
-        if "Today" not in time:
+        if "today" not in str(time).lower():
             continue
         time = format_time(time)
         
@@ -128,5 +128,6 @@ async def check_ads(bot: Bot):
                 await bot.send_media_group(chat_id=os.getenv('CHANNEL_ID'), media=media_group)
                 f.write(get_ad_hash(ad.to_dict()) + "\n")
                 await asyncio.sleep(2)
+
 
 
